@@ -1,0 +1,9 @@
+---
+ - name: Launching aws ec2 instance
+   hosts: localhost
+   gather_facts: false
+   tasks:
+    - name: create bucket
+      amazon.aws.s3_bucket:
+        name: aadhyadevopsbucket123
+        state: present
