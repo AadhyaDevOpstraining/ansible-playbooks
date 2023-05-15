@@ -1,0 +1,122 @@
+How to run a tasks with required tags ?
+ansible-playbook <your_yaml_file> --tags tag_1,tag_2
+
+
+How to skip a tasks with required tags ?
+ansible-playbook <your_yaml_file> --skip-tags tag_1,tag_2
+
+How to list all tags ?
+
+ansible-playbook <your_yaml_file> --list-tags
+
+Note: It wont display the tags of a task if one of the tag value is never
+
+$ ansible-playbook playbook.yml --tags "firstname"
+$ ansible-playbook playbook.yml --tags "secondname"
+$ ansible-playbook playbook.yml --skip-tags "secondname"  --> To skip sceond tag use this command  
+===============================================================
+
+- hosts: all
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+    - name: first name
+      raw: echo "Aadhyamai " > /tmp/LOG
+      tags:
+        - firstname
+    - name: second name
+      raw: echo "Aadhya " > /tmp/LOG
+      tags:
+        - secondname
+
+
+$ ansible-playbook playbook.yml --tags "firstname"
+$ ansible-playbook playbook.yml --tags "secondname"
+$ ansible-playbook playbook.yml --skip-tags "secondname"  --> To skip sceond tag use this command  
+
+
+		
+- hosts: all
+  user: ansible
+  become: true
+  connection: ssh
+  tasks:
+    - name: Install apache for ubuntu
+      apt: pkg=nginx state=absent update_cache=true
+	  tags:
+	    - ubuntu 
+      #when: ansible_os_family == "Debian"  #ubuntuserver will work
+    - name: Install apache for redhat
+      yum: name=httpd state=present
+	  tags:
+	     - redhat
+      #when: ansible_os_family == "RedHat"
+
+skip tags:
+#ansible-playbook tags1.yml --skip-tags "redhat"
+
+- hosts: all
+  user: ansible
+  become: true
+  connection: ssh
+  tasks:
+    - name: Install apache for ubuntu
+      apt: pkg=nginx state=absent update_cache=true
+      tags:
+       - ubuntu
+      #when: ansible_os_family == "Debian"  #ubuntuserver will work
+    - name: Install apache for redhat
+      yum: name=httpd state=present
+      tags:
+         - redhat
+      #when: ansible_os_family == "RedHat"
+    - name: first name
+      raw: echo "Aadhyamai " > /tmp/LOG
+      tags:
+        - firstname
+    - name: second name
+      raw: echo "Aadhya " > /tmp/LOG
+      tags:
+        - secondname
+
+
+
+---
+  - name: Play with 5 tasks
+    hosts: localhost
+    gather_facts: false
+    tasks:
+      - debug:
+          msg: "This is a first task"
+        tags:
+          - first
+          - common
+          - always
+      - debug:
+          msg: "This is a second task"
+        tags:
+          - second
+          - never
+      - debug:
+          msg: "This is a third task"
+        tags:
+          - third
+          - common
+          - never
+      - debug:
+          msg: "This is a fourth task"
+        tags:
+          - fourthbug:
+          msg: "This is a fifth task"
+   
+          - never
+      - de     tags:
+          - fifth
+          - never
+
+------------------------------------
+		
+$ ansible-playbook playbook.yml --tags "firstname"
+$ ansible-playbook playbook.yml --tags "secondname"
+$ ansible-playbook playbook.yml --skip-tags "secondname"  --> To skip sceond tag use this command  
