@@ -2,8 +2,11 @@
  - name: Launching aws ec2 instance
    hosts: localhost
    gather_facts: false
+   vars:
+     ansible_python_interpreter: /usr/bin/python3
    tasks:
     - name: create bucket
       amazon.aws.s3_bucket:
-        name: aadhyadevopsbucket123
+        name: aadhyadevopsbucket1234
         state: present
+
